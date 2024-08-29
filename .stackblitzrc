@@ -1,0 +1,5 @@
+{
+  "installDependencies": false,
+  "startCommand": "pnpm install --prefer-offline && pnpm dev",
+  "packageManager": "pnpm@9.9.0"
+}

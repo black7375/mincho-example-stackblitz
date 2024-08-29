@@ -1,0 +1,73 @@
+import { transform, initTransformContext, replaceVariantReference } from "@mincho-js/transform-to-vanilla";
+import { globalStyle as globalStyle$1, style as style$1 } from "@vanilla-extract/css";
+import { assignVars, composeStyles, createContainer, createGlobalTheme, createGlobalThemeContract, createTheme, createThemeContract, createVar, fallbackVar, fontFace, generateIdentifier, globalFontFace, globalKeyframes, globalLayer, keyframes, layer } from "@vanilla-extract/css";
+function globalCss(selector, rule) {
+  globalStyle$1(selector, transform(rule));
+}
+const globalStyle = globalCss;
+function css(style2, debugId) {
+  return style$1(transform(style2), debugId);
+}
+const style = css;
+function cssVariants(styleMapOrData, mapDataOrDebugId, debugId) {
+  if (isMapDataFunction(mapDataOrDebugId)) {
+    const data = styleMapOrData;
+    const mapData = mapDataOrDebugId;
+    return processVariants(data, mapData, debugId);
+  } else {
+    const styleMap = styleMapOrData;
+    const debugId2 = mapDataOrDebugId;
+    return processVariants(styleMap, (style2) => style2, debugId2);
+  }
+}
+const styleVariants = cssVariants;
+function isMapDataFunction(mapDataOrDebugId) {
+  return typeof mapDataOrDebugId === "function";
+}
+function processVariants(items, transformItem, debugId) {
+  const contexts = [];
+  const variantMap = {};
+  const classMap = {};
+  for (const key in items) {
+    const context = structuredClone(initTransformContext);
+    const className = style$1(
+      transform(transformItem(items[key], key), context),
+      debugId ? `${debugId}_${key}` : key
+    );
+    contexts.push(context);
+    variantMap[`%${key}`] = className;
+    classMap[key] = className;
+  }
+  for (const context of contexts) {
+    context.variantMap = variantMap;
+    replaceVariantReference(context);
+    for (const [key, value] of Object.entries(context.variantReference)) {
+      globalCss(key, value);
+    }
+  }
+  return classMap;
+}
+export {
+  assignVars,
+  composeStyles,
+  createContainer,
+  createGlobalTheme,
+  createGlobalThemeContract,
+  createTheme,
+  createThemeContract,
+  createVar,
+  css,
+  cssVariants,
+  fallbackVar,
+  fontFace,
+  generateIdentifier,
+  globalCss,
+  globalFontFace,
+  globalKeyframes,
+  globalLayer,
+  globalStyle,
+  keyframes,
+  layer,
+  style,
+  styleVariants
+};

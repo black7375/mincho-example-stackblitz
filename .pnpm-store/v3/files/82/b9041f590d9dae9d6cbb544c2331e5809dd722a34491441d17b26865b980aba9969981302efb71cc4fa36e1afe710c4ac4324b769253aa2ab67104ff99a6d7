@@ -1,0 +1,2 @@
+export declare const mergeObject: <T1 extends object, T2 extends object>(target: T1, source: T2) => T1 & T2;
+export declare function isEmptyObject(obj: object): boolean;

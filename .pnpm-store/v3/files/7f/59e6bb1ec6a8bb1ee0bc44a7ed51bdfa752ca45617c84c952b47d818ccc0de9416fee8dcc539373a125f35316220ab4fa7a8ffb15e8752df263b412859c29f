@@ -1,0 +1,5 @@
+import { StyleResult, TransformContext } from './index';
+import { VanillaStyleRuleValue } from '@/types/style-rule';
+export declare function createNestedObject(context: TransformContext, target: StyleResult): StyleResult;
+export declare function createPathSetter(result: StyleResult, context: TransformContext): (key: string, value: VanillaStyleRuleValue) => void;
+export declare function processNestedResult(result: StyleResult, nestedResult: StyleResult): void;

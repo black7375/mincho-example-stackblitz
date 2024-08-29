@@ -1,0 +1,8 @@
+type FallbackValues = string[];
+type MergeNeedValues = string[];
+type MergeNeedFallbackValues = (string | FallbackValues)[];
+export declare function mergeToComma(values: MergeNeedValues): string;
+export declare function mergeToComma(values: MergeNeedFallbackValues): FallbackValues;
+export declare function mergeToSpace(values: MergeNeedValues): string;
+export declare function mergeToSpace(values: MergeNeedFallbackValues): FallbackValues;
+export {};

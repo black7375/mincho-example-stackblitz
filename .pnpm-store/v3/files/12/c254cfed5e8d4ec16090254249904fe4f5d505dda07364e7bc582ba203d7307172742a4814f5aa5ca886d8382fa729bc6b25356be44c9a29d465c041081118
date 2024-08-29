@@ -1,0 +1,2 @@
+import { TransformContext, CSSRuleExistValue } from '../transform-object';
+export declare function replacePropertyReference(valueStr: string, context: TransformContext): string | CSSRuleExistValue | (string | CSSRuleExistValue)[];

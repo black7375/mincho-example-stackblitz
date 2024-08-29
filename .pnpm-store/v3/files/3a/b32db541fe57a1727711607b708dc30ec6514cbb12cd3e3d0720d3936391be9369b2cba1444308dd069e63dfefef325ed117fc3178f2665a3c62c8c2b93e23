@@ -1,0 +1,14 @@
+import { AtRulesPrefix } from '../transform-object/index';
+import { NonNullableString } from '../types/string';
+export declare function isRuleKey(key: string): boolean;
+export declare function atRuleKeyInfo(key: string): {
+    isToplevelRules: boolean;
+    atRuleKey: string;
+    atRuleNestedKey: string;
+};
+export declare function anonymousKeyInfo(keyStr: string): {
+    isAnimationName: boolean;
+    isFontFamily: boolean;
+    isAnonymousSymbol: boolean;
+};
+export declare function atRuleKeyMerge(atRule: AtRulesPrefix | NonNullableString, firstKey: string, secondKey: string): string;

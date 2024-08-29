@@ -1,0 +1,4 @@
+import { TransformContext } from './transform-object/index';
+import { ComplexStyleRule } from '@vanilla-extract/css';
+import { ComplexCSSRule } from './types/style-rule';
+export declare function transform(style: ComplexCSSRule, context?: TransformContext): ComplexStyleRule;

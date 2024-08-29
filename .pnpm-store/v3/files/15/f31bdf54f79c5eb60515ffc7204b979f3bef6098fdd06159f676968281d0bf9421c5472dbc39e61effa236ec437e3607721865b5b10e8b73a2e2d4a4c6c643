@@ -1,0 +1,22 @@
+import { StyleRule } from '@vanilla-extract/css';
+import { CSSRule, CSSRuleValue, VanillaStyleRuleValue, AtRulesKeywords } from '@/types/style-rule';
+import { Properties } from '@mincho-js/csstype';
+export type StyleResult = {
+    [key in string]: VanillaStyleRuleValue;
+};
+export type CSSRuleExistValue = Exclude<CSSRuleValue, undefined>;
+export type AtRulesPrefix = `@${AtRulesKeywords}`;
+export interface TransformContext {
+    result: StyleResult;
+    basedKey: string;
+    parentSelector: string;
+    parentAtRules: {
+        [key in AtRulesPrefix]: string;
+    };
+    propertyReference: Properties;
+    variantMap: Record<string, string>;
+    variantReference: Record<string, StyleResult>;
+}
+export declare const initTransformContext: TransformContext;
+export declare function transformStyle(style: CSSRule, context?: TransformContext): StyleRule;
+export declare function mergeVariantReference(context: TransformContext, tempContext: TransformContext): void;

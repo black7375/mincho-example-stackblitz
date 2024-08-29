@@ -1,0 +1,7 @@
+import { NonNullableString } from '../types/string';
+import { SimplePseudos, CamelPseudos } from '../types/simple-pseudo';
+type InputKeyValue = NonNullableString | CamelPseudos;
+export declare function replacePseudoSelectors(keyStr: CamelPseudos): SimplePseudos;
+export declare function replacePseudoSelectors(keyStr: NonNullableString): NonNullableString;
+export declare function isSimplePseudoSelectorKey(value: InputKeyValue): boolean;
+export {};

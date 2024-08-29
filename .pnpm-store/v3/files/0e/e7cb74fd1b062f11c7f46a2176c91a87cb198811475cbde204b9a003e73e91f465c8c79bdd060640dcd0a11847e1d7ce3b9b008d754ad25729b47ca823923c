@@ -1,0 +1,5 @@
+import { TransformContext } from '../transform-object/index';
+export declare function isSelectorskey(key: string): key is "selectors";
+export declare function isComplexKey(key: string): boolean;
+export declare function isSimpleSelectorKey(key: string): boolean;
+export declare function nestedSelectorKey(key: string, context: TransformContext): string;

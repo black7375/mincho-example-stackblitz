@@ -1,0 +1,1 @@
+export declare function simplyImportant(value: string): string;

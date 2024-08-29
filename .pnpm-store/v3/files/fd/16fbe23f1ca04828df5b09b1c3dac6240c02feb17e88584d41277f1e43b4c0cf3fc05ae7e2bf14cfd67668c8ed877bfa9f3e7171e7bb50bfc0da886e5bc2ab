@@ -1,0 +1,4 @@
+export declare function isCSSVarKey(keyStr: string): boolean;
+export declare function isPureCSSVarKey(keyStr: string): boolean;
+export declare function isVarsKey(keyStr: string): keyStr is "vars";
+export declare function replaceCSSVarKey(keyStr: string): string;

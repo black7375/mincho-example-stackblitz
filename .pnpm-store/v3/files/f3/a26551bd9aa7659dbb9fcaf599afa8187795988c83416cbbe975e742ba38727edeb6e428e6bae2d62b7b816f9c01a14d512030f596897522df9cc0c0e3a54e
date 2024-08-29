@@ -1,0 +1,4 @@
+export type NonNullableString = string & NonNullable<unknown>;
+export type ToKebabCase<InputString extends string, AccumulatorString extends string = ""> = InputString extends `${infer FirstChar}${infer RemainingString}` ? ToKebabCase<RemainingString, `${AccumulatorString}${FirstChar extends Lowercase<FirstChar> ? "" : "-"}${Lowercase<FirstChar>}`> : AccumulatorString;
+export type FromKebabCase<InputString extends string> = InputString extends `${infer BeforeString}-${infer AfterString}` ? `${BeforeString}${Capitalize<FromKebabCase<AfterString>>}` : InputString;
+export type ColonToSnake<InputString extends string> = InputString extends `${infer BeforeString}:${infer AfterString}` ? `${BeforeString}_${ColonToSnake<AfterString>}` : InputString;

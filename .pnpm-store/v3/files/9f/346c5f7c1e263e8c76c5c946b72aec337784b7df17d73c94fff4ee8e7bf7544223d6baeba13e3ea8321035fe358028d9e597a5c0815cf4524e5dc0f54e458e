@@ -1,0 +1,2 @@
+import { TransformContext } from '.';
+export declare function replaceVariantReference(context: TransformContext): void;

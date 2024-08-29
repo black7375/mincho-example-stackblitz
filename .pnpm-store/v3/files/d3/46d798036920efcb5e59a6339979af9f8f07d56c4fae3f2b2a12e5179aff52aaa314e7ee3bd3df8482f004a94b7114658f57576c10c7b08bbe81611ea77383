@@ -1,0 +1,149 @@
+import { StyleRule } from '@vanilla-extract/css';
+import { Properties, Property, NonNullableString } from '@mincho-js/csstype';
+import { CamelPseudos, SpacePropertiesKey, CommaPropertiesKey, NestedPropertiesMap } from '@mincho-js/css-additional-types';
+import { GlobalFontFaceRule } from './fontface-rule';
+import { IntRange, Spread } from './utils';
+export type VanillaStyleRuleKey = keyof StyleRule;
+export type VanillaStyleRuleValue = StyleRule[VanillaStyleRuleKey];
+export type VanillaStyleArray = Array<StyleRule | ClassNames>;
+export type VanillaClassNames = ClassNames;
+export type ComplexCSSRule = CSSRule | Array<ComplexCSSItem>;
+export type ComplexCSSItem = CSSRule | ClassNames;
+export interface CSSRule extends CSSPropertiesWithConditions, SelectorProperty {
+}
+export interface GlobalCSSRule extends CSSPropertiesWithConditions {
+}
+export type CSSRuleKey = keyof CSSRule;
+export type CSSRuleValue = CSSRule[CSSRuleKey];
+export type ClassNames = string | Array<ClassNames>;
+export interface CSSPropertiesWithConditions extends CSSPropertiesWithVars, WithConditions<CSSPropertiesWithVars> {
+}
+export interface CSSPropertiesWithVars extends CSSComplexProperties, VarProperty, TopLevelVar {
+}
+export interface CSSComplexProperties extends CSSProperties, CSSMergeProperties {
+}
+export type CSSProperties = {
+    [Property in keyof WithAnonymousCSSProperties]: AnonymousCSSPropertyValue<Property> | (Property extends KeyofNestedPropertiesMap ? Spread<[
+        NestedProperty<Property>,
+        PropertyBasedCondition<AnonymousCSSPropertyValue<Property> | NestedProperty<Property>>
+    ]> : PropertyBasedCondition<AnonymousCSSPropertyValue<Property>>);
+};
+type KeyofAnonymousCSSProperties = keyof WithAnonymousCSSProperties;
+type KeyofNestedPropertiesMap = keyof NestedPropertiesMap;
+type AnonymousCSSPropertyValue<Property extends KeyofAnonymousCSSProperties> = CSSPropertyValue<WithAnonymousCSSProperties[Property]>;
+type CSSPropertyValue<PropertyValue> = PropertyValue | CSSVarFunction | Array<PropertyValue | CSSVarFunction>;
+type NestedPropertyValue<PropertyValue> = PropertyValue | PropertyBasedCondition<PropertyValue>;
+type NestedProperty<Property extends KeyofNestedPropertiesMap> = {
+    [NestedProperty in keyof NestedPropertiesMap[Property]]?: NestedPropertyValue<AnonymousCSSPropertyValue<Extract<NestedPropertiesMap[Property][NestedProperty], keyof WithAnonymousCSSProperties>>>;
+};
+export interface PropertyBasedCondition<PropertyValue> extends CSSPropertyConditions<NestedPropertyValue<PropertyValue>> {
+}
+interface CSSPropertyConditions<PropertyValue> extends CSSConditions<PropertyValue> {
+    base?: PropertyValue;
+}
+interface SelectorProperty {
+    /**
+     * More complex rules can be written using the `selectors` key.
+     *
+     * @see https://vanilla-extract.style/documentation/styling/#complex-selectors
+     */
+    selectors?: ComplexSelectors<CSSPropertiesWithConditions>;
+}
+export interface VarProperty {
+    /**
+     * Custom properties are scoped to the element(s) they are declared on, and participate in the cascade: the value of such a custom property is that from the declaration decided by the cascading algorithm.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+     */
+    vars?: TopLevelVar;
+}
+interface TopLevelVar {
+    [key: CSSVarKey]: CSSVarValue;
+}
+export type CSSVarKey = `--${string}` | `$${string}`;
+export type CSSVarValue = `${string | number}`;
+export type CSSVarFunction = `var(--${string})` | `var(--${string}, ${CSSVarValue})` | `$${string}` | `$${string}(${CSSVarValue})`;
+interface SpaceProperties extends Pick<CSSProperties, SpacePropertiesKey> {
+}
+interface CommaProperties extends Pick<CSSProperties, CommaPropertiesKey> {
+}
+type SpaceMergeProperties = {
+    [SpaceProperty in keyof SpaceProperties as `${SpaceProperty}_`]: Array<SpaceProperties[SpaceProperty]>;
+};
+type CommaMergeProperties = {
+    [CommaProperty in keyof CommaProperties as `${CommaProperty}$`]: Array<CommaProperties[CommaProperty]>;
+};
+export interface CSSMergeProperties extends SpaceMergeProperties, CommaMergeProperties {
+}
+export type WithConditions<StyleType> = StyleType & NestedConditions<StyleType>;
+interface NestedConditions<StyleType> extends CSSConditions<StyleType & NestedConditions<StyleType>> {
+}
+interface CSSConditions<StyleType> extends AtRules<StyleType>, ToplevelSelectors<StyleType> {
+}
+export interface ToplevelSelectors<StyleType> extends ComplexSelectors<StyleType>, SimplyNestedSelectors<StyleType>, PseudoSelectorMap<StyleType> {
+}
+interface ComplexSelectors<StyleType> {
+    /**
+     * Toplevel complex selector.
+     *
+     * @see https://vanilla-extract.style/documentation/styling/#complex-selectors
+     */
+    [selector: `${string}&${string}`]: StyleType;
+}
+interface SimplyNestedSelectors<StyleType> {
+    [selector: `:${string}` | `[${string}`]: StyleType;
+}
+type PseudoSelectorMap<StyleType> = {
+    [key in CamelPseudos]?: StyleType;
+};
+export type AtRulesKeywords = "media" | "supports" | "container" | "layer";
+interface AtRules<StyleType> extends NestedAtRules<StyleType>, TopLevelAtRules<StyleType> {
+}
+type NestedAtRules<StyleType> = {
+    [key in AtRulesKeywords as `@${key}`]?: {
+        [query: string]: StyleType;
+    };
+};
+type TopLevelAtRules<StyleType> = {
+    [key in AtRulesKeywords as `@${key} ${string}`]?: StyleType;
+};
+interface WithAnonymousCSSProperties extends Omit<ResolvedProperties, AnonymousPropertyKey>, AnonymousProperty {
+}
+export interface AnonymousProperty {
+    /**
+     * The **`animation-name`** CSS property specifies the names of one or more `@keyframes` at-rules that describe the animation to apply to an element. Multiple `@keyframe` at-rules are specified as a comma-separated list of names. If the specified name does not match any `@keyframe` at-rule, no properties are animated.
+     *
+     * **Syntax**: `[ none | <keyframes-name> ]#`
+     *
+     * **Initial value**: `none`
+     *
+     * | Chrome  | Firefox | Safari  |  Edge  |   IE   |
+     * | :-----: | :-----: | :-----: | :----: | :----: |
+     * | **43**  | **16**  |  **9**  | **12** | **10** |
+     * | 3 _-x-_ | 5 _-x-_ | 4 _-x-_ |        |        |
+     *
+     * @see https://developer.mozilla.org/docs/Web/CSS/animation-name
+     */
+    animationName?: Property.AnimationName | {
+        [key in CSSKeyframeFromTo]?: CSSComplexProperties;
+    };
+    /**
+     * The **`font-family`** CSS property specifies a prioritized list of one or more font family names and/or generic family names for the selected element.
+     *
+     * **Syntax**: `[ <family-name> | <generic-family> ]#`
+     *
+     * **Initial value**: depends on user agent
+     *
+     * | Chrome | Firefox | Safari |  Edge  |  IE   |
+     * | :----: | :-----: | :----: | :----: | :---: |
+     * | **1**  |  **1**  | **1**  | **12** | **3** |
+     *
+     * @see https://developer.mozilla.org/docs/Web/CSS/font-family
+     */
+    fontFamily?: Property.FontFamily | GlobalFontFaceRule;
+}
+export type AnonymousPropertyKey = keyof AnonymousProperty;
+interface ResolvedProperties extends Properties<number | NonNullableString> {
+}
+type CSSKeyframeFromTo = "from" | "to" | `${IntRange<1, 10>}0%` | `${number & NonNullable<unknown>}%`;
+export {};

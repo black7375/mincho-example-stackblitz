@@ -1,0 +1,14 @@
+import { CSSProperties, ComplexCSSRule, GlobalCSSRule, CSSRule } from '@mincho-js/transform-to-vanilla';
+export type { Adapter, FileScope } from '@vanilla-extract/css';
+export { assignVars, composeStyles, createContainer, createGlobalTheme, createGlobalThemeContract, createTheme, createThemeContract, createVar, fallbackVar, fontFace, generateIdentifier, globalFontFace, globalKeyframes, globalLayer, keyframes, layer } from '@vanilla-extract/css';
+export type { CSSProperties, ComplexCSSRule, GlobalCSSRule, CSSRule };
+export type ComplexStyleRule = ComplexCSSRule;
+export type GlobalStyleRule = GlobalCSSRule;
+export type StyleRule = CSSRule;
+export declare function globalCss(selector: string, rule: GlobalCSSRule): void;
+export declare const globalStyle: typeof globalCss;
+export declare function css(style: ComplexCSSRule, debugId?: string): string;
+export declare const style: typeof css;
+export declare function cssVariants<StyleMap extends Record<string | number, ComplexCSSRule>>(styleMap: StyleMap, debugId?: string): Record<keyof StyleMap, string>;
+export declare function cssVariants<Data extends Record<string | number, unknown>, Key extends keyof Data, MapData extends (value: Data[Key], key: Key) => ComplexCSSRule>(data: Data, mapData: MapData, debugId?: string): Record<keyof Data, string>;
+export declare const styleVariants: typeof cssVariants;

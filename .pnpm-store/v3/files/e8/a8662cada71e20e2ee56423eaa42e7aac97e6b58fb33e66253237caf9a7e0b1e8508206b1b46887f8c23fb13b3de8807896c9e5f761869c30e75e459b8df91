@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@mincho-js/css",
+  "description": " Natural CSS in the Typescript",
+  "version": "0.0.3",
+  "sideEffects": true,
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mincho-js/mincho.git",
+    "directory": "packages/css"
+  },
+  "keywords": [
+    "css",
+    "style",
+    "typescript",
+    "vanilla-extract",
+    "preprocessor",
+    "transform",
+    "nested",
+    "nested css",
+    "css nesting",
+    "css-in-js",
+    "css-in-ts"
+  ],
+  "bugs": {
+    "url": "https://github.com/mincho-js/mincho/issues"
+  },
+  "homepage": "https://github.com/mincho-js/mincho/tree/main/packages/css#readme",
+  "typings": "./dist/esm/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      }
+    }
+  },
+  "publishConfig": {
+    "directory": "_release/package"
+  },
+  "files": [
+    "README.md",
+    "dist/"
+  ],
+  "scripts": {
+    "clean": "yarn g:clean",
+    "build": "yarn g:build",
+    "build:watch": "yarn g:build-watch",
+    "lint": "yarn g:lint",
+    "fix": "yarn g:fix",
+    "check": "yarn g:check"
+  },
+  "prettier": "prettier-config-custom",
+  "dependencies": {
+    "@mincho-js/transform-to-vanilla": "^0.0.2"
+  },
+  "devDependencies": {
+    "@vanilla-extract/css": "^1.15.3",
+    "eslint-config-custom": "^0.0.0",
+    "prettier-config-custom": "^0.0.0",
+    "tsconfig-custom": "^0.0.0",
+    "vite-config-custom": "^0.0.0"
+  },
+  "peerDependencies": {
+    "@vanilla-extract/css": "*"
+  }
+}

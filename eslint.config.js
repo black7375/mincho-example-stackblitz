@@ -1,28 +1,56 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+// @ts-check
+
+import globals from "globals";
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import tsParser from "@typescript-eslint/parser";
+import reactRefreshPlugin from "eslint-plugin-react-refresh";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import { fixupPluginRules } from "@eslint/compat";
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parserOptions: {
+        project: ["./tsconfig.json", "./tsconfig.node.json"],
+      },
+    },
+  },
+  {
+    files: ["*.ts", "*.tsx"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: ["tsconfig.json", "tsconfig.node.json"],
+        ecmaFeatures: { jsx: true },
+      },
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...globals.browser, ...globals.es2020 },
     },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      "react-refresh": reactRefreshPlugin,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: error TS2345: Index signature for type 'string' is missing in type 'string[]'.ts
+      "react-hooks": fixupPluginRules(reactHooksPlugin),
     },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore: error TS2322: type 'string' is not assignable to type 'RuleEntry | undefined'.ts(2322)
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
+      ...reactHooksPlugin.configs.recommended.rules,
+      "react-refresh/only-export-components": [
+        "warn",
         { allowConstantExport: true },
       ],
     },
   },
-)
+  {
+    files: ["*.js"],
+    extends: [tseslint.configs.disableTypeChecked],
+  },
+  {
+    ignores: ["dist/**"],
+  },
+);
